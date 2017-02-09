@@ -1,0 +1,139 @@
+group 'com.zunpeng.youzan'
+version '0.0.1'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'com.jfrog.bintray'
+
+buildscript {
+    ext {
+        slf4jVersion = '1.7.13'
+        logbackVersion = '1.1.3'
+        okHttpVersion = '3.5.0'
+        retrofit2Version = '2.1.0'
+    }
+    repositories {
+        maven {
+            url "http://maven.aliyun.com/nexus/content/groups/public/"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.6'
+    }
+}
+
+sourceCompatibility = 1.7
+
+repositories {
+    maven {
+        url "http://maven.aliyun.com/nexus/content/groups/public/"
+    }
+    jcenter()
+}
+
+dependencies {
+    compile("com.google.code.gson:gson:2.8.0")
+    compile("com.thoughtworks.xstream:xstream:1.4.8")
+    compile("org.codehaus.jettison:jettison:1.3.7")
+    compile("commons-codec:commons-codec:1.10")
+    compile("commons-beanutils:commons-beanutils:1.9.2")
+    compile("commons-io:commons-io:2.4")
+    compile("commons-lang:commons-lang:2.6")
+    compile("joda-time:joda-time:2.9.1")
+    compile("org.jsoup:jsoup:1.8.3")
+    compile("com.google.guava:guava:19.0")
+    compile("dom4j:dom4j:1.6.1")
+    compile("org.apache.tika:tika-core:1.13")
+
+    compile("com.squareup.retrofit2:retrofit:$retrofit2Version")
+    compile("com.squareup.retrofit2:converter-gson:$retrofit2Version")
+    compile("com.google.code.gson:gson:2.8.0")
+
+    compile("com.squareup.okhttp:okhttp:2.7.2")
+    compile("com.squareup.okhttp3:okhttp:$okHttpVersion")
+    compile("com.squareup.okhttp3:okhttp-urlconnection:$okHttpVersion")
+    compile("com.squareup.okhttp3:logging-interceptor:$okHttpVersion")
+
+    compile("org.slf4j:slf4j-api:$slf4jVersion")
+    compile("org.slf4j:jcl-over-slf4j:$slf4jVersion")
+    compile("org.slf4j:jul-to-slf4j:$slf4jVersion")
+    compile("org.slf4j:log4j-over-slf4j:$slf4jVersion")
+    compile("ch.qos.logback:logback-classic:$logbackVersion")
+    compile("ch.qos.logback:logback-core:$logbackVersion")
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+/**************************************************************/
+/**************************************************************/
+/********************* publish jar ****************************/
+/**************************************************************/
+/**************************************************************/
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+def siteUrl = "https://github.com/usydapeng/youzan-sdk"
+def gitUrl = "git@github.com:usydapeng/youzan-sdk.git"
+
+
+task writeNewPom << {
+    pom {
+        project {
+            packaging 'jar'
+            // Add your description here
+            name 'youzan sdk' 	//项目描述
+            url siteUrl
+            inceptionYear '2016'
+            // Set your license
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            developers {
+                developer {
+                    id 'usydapeng'		//填写的一些基本信息
+                    name 'dapeng'
+                    email 'usydapeng@gmail.com'
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+        }
+    }.writeTo("$buildDir/pom.xml")
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "youzan-sdk"	//发布到JCenter上的项目名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
