@@ -1,5 +1,7 @@
 package org.zunpeng.utils.retrofit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import org.slf4j.Logger;
@@ -20,6 +22,10 @@ public class RetrofitUtils {
 
 	private static Retrofit instance = null;
 
+	private static Gson gson = new GsonBuilder()
+//			.setDateFormat("yyyy-MM-dd hh:mm:ss")
+			.create();
+
 	public static Retrofit getInstance(String baseUrl){
 		if (instance == null){
 			synchronized (RetrofitUtils.class){
@@ -35,11 +41,28 @@ public class RetrofitUtils {
 		return retrofit.create(clazz);
 	}
 
-	public static String info(Call<ResponseBody> call) throws java.io.IOException {
+	public static String stringInfo(Call<ResponseBody> call) throws java.io.IOException {
 		Response<ResponseBody> response = call.execute();
 
 		if(response.isSuccessful()){
-			return response.body().string();
+			String responseContent = response.body().string();
+			logger.info("---------------- success: " + responseContent);
+			return responseContent;
+		} else {
+			logger.info("---------------- http status code:\t" + response.code());
+			logger.info("---------------- http response message:\t" + response.message());
+			logger.info("---------------- http error body:\t" + response.errorBody().string());
+			throw new RuntimeException("---------------- request error");
+		}
+	}
+
+	public static <T> T info(Call<T> call) throws java.io.IOException {
+		Response<T> response = call.execute();
+
+		if(response.isSuccessful()){
+			T t = response.body();
+			logger.info("---------------- success: " + gson.toJson(t));
+			return t;
 		} else {
 			logger.info("---------------- http status code:\t" + response.code());
 			logger.info("---------------- http response message:\t" + response.message());
@@ -59,7 +82,7 @@ public class RetrofitUtils {
 		return new Retrofit.Builder()
 				.baseUrl(baseUrl)
 				.client(okHttpClient)
-				.addConverterFactory(GsonConverterFactory.create())
+				.addConverterFactory(GsonConverterFactory.create(gson))
 				.build();
 	}
 }
