@@ -16,18 +16,18 @@ public class YouzanApiUtils {
 
 	public static String URL_GET_AUTHORIATION_CODE = "https://open.youzan.com/oauth/authorize";
 
-	private static String version_1_0_0 = "1.0.0";
+	public static String version_1_0_0 = "1.0.0";
 
-	private static String version_2_0_0 = "2.0.0";
+	public static String version_2_0_0 = "2.0.0";
 
 	//根据微信粉丝用户的 openid 或 fans_id 获取用户信息
-	private static String MEHTOD_KDT_USERS_WEIXIN_FOLLOWER = "kdt.users.weixin.follower";
+	public static String MEHTOD_KDT_USERS_WEIXIN_FOLLOWER = "kdt.users.weixin.follower";
 
 	//获取单笔交易的信息 2.0.0
-	private static String METHOD_KDT_TRADE = "kdt.trade";
+	public static String METHOD_KDT_TRADE = "kdt.trade";
 
 	//根据商品货号获取商品
-	private static String METHOD_KDT_ITEMS_CUSTOM = "kdt.items.custom";
+	public static String METHOD_KDT_ITEMS_CUSTOM = "kdt.items.custom";
 
 	public static String buildUrl(String baseUrl, Map<String, String> requestParameters) {
 		try {
