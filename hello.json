@@ -1,7 +1,0 @@
-{
-	"access_token": "15ea83af92bf3a0496855e3fdafff8df",
-	"expires_in": 604800,
-	"token_type": "Bearer",
-	"scope": "item trade trade_virtual user utility shop item_category logistics pay_qrcode coupon present_advanced item_category_advanced reviews",
-	"refresh_token": "c6e87dc79eb037bbaea10b5d3ef133bb"
-}
