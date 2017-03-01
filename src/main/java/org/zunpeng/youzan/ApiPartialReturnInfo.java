@@ -4,6 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by dapeng on 2017/3/1.
+ *
+ * 特殊接口，只用于获取店铺信息
  */
 public class ApiPartialReturnInfo<T> {
 
