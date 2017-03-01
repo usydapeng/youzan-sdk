@@ -1,6 +1,7 @@
 package org.zunpeng.youzan;
 
 import okhttp3.ResponseBody;
+import org.zunpeng.youzan.order.GetTradeReturnInfo;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -19,4 +20,8 @@ public interface YouzanService {
 
 	@GET("/api/oauthentry/{method}/{version}/get")
 	Call<ResponseBody> invokeApi_get(@Path("method") String method, @Path("version") String version, @QueryMap Map<String, String> requestParams);
+
+	//2.0.0
+	@GET("/api/oauthentry/kdt.trade/{version}/get")
+	Call<ApiReturnInfo<GetTradeReturnInfo>> getTradeInfo(@Path("version") String version, @QueryMap Map<String, String> requestParams);
 }

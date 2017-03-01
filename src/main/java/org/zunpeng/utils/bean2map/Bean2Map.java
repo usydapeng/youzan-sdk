@@ -1,5 +1,6 @@
 package org.zunpeng.utils.bean2map;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import org.apache.commons.lang.StringUtils;
@@ -8,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,11 +21,13 @@ public class Bean2Map {
 
 	public Map<String, Object> retrieveProp(){
 		Class<?> classType = this.getClass();
-		Field[] fields = classType.getDeclaredFields();
+
+		List<Field> fieldList = Lists.newArrayList();
+		getField(classType, fieldList);
 
 		try {
 			Map<String, Object> map = Maps.newHashMap();
-			for(Field field : fields){
+			for(Field field : fieldList){
 				if(Modifier.isStatic(field.getModifiers())){
 					continue;
 				}
@@ -65,5 +69,15 @@ public class Bean2Map {
 		}
 
 		return processMap;
+	}
+
+	private void getField(Class clazz, List<Field> fieldList){
+		Field[] fields = clazz.getDeclaredFields();
+		fieldList.addAll(Lists.newArrayList(fields));
+
+		Class superClazz = clazz.getSuperclass();
+		if(!superClazz.equals(Object.class)){
+			getField(superClazz, fieldList);
+		}
 	}
 }

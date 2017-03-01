@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Call;
@@ -27,14 +28,15 @@ public class RetrofitUtils {
 			.create();
 
 	public static Retrofit getInstance(String baseUrl){
-		if (instance == null){
-			synchronized (RetrofitUtils.class){
-				if (instance == null){
-					instance = build(baseUrl);
-				}
-			}
-		}
-		return instance;
+//		if (instance == null){
+//			synchronized (RetrofitUtils.class){
+//				if (instance == null){
+//					instance = build(baseUrl);
+//				}
+//			}
+//		}
+//		return instance;
+		return build(baseUrl);
 	}
 
 	public static <T> T createService(Retrofit retrofit, Class<T> clazz){
@@ -72,11 +74,22 @@ public class RetrofitUtils {
 	}
 
 	private static Retrofit build(String baseUrl){
+		//声明日志类//设定日志级别
+		HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+			@Override
+			public void log(String message) {
+				logger.info(message);
+			}
+		});
+		httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
 		OkHttpClient okHttpClient = new OkHttpClient.Builder()
 				.readTimeout(5000, TimeUnit.MILLISECONDS)
 				.connectTimeout(5000,TimeUnit.MILLISECONDS)
 				//不记录请求cookie
 //				.cookieJar(new CustomCookieJar())
+				//添加拦截器
+				.addInterceptor(httpLoggingInterceptor)
 				.build();
 
 		return new Retrofit.Builder()

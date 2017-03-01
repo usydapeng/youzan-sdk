@@ -1,0 +1,20 @@
+{
+	"response": {
+		"user": {
+			"sex": "",
+			"tags": [],
+			"is_follow": false,
+			"points": 0,
+			"traded_num": 1,
+			"traded_money": "0.01",
+			"level_info": {},
+			"user_id": "2615931693",
+			"weixin_openid": "ohHlwuMtvin0NITftvlbqjowG9hQ",
+			"nick": "",
+			"avatar": "",
+			"follow_time": "0000-00-00 00:00:00",
+			"province": "",
+			"city": ""
+		}
+	}
+}

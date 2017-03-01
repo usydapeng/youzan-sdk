@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="30 seconds">
+
+	<property resource="logback.properties"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="rollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${log_home}/${portal_log_name}.log</file>	
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${log_home}/${portal_log_name}.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+			<maxHistory>30</maxHistory>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+	        	<maxFileSize>${max_file_size}</maxFileSize>
+	        </timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36}:%line - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="org.springframework" level="ERROR" />
+	<logger name="org.hibernate" level="ERROR" />
+	<logger name="org.apache" level="ERROR" />
+	
+	<!--log4jdbc -->
+	<logger name="jdbc.sqltiming" level="INFO" additivity="false">
+		<appender-ref ref="console" />
+	</logger>
+	<root level="info">
+		<appender-ref ref="console" />
+		<appender-ref ref="rollingFile" />
+	</root>
+
+
+	<!-- TODO 输出mapper日志 -->
+	<logger name="org.zunpeng.mapper" level="info,debug" additivity="false">
+		<appender-ref ref="console"/>
+		<appender-ref ref="rollingFile"/>
+	</logger>
+
+	<logger name="com.oldpeng.core" level="ERROR,INFO,DEBUG" additivity="false">
+		<appender-ref ref="console"/>
+		<appender-ref ref="rollingFile"/>
+	</logger>
+
+	<!--<logger name="retrofit2" level="ERROR,INFO,DEBUG" additivity="false">-->
+	<!--<appender-ref ref="console"/>-->
+	<!--<appender-ref ref="rollingFile"/>-->
+	<!--</logger>-->
+
+	<!--<logger name="okhttp3" level="ERROR,INFO,DEBUG" additivity="false">-->
+	<!--<appender-ref ref="console"/>-->
+	<!--<appender-ref ref="rollingFile"/>-->
+	<!--</logger>-->
+
+</configuration>
